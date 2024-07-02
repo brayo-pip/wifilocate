@@ -18,10 +18,6 @@ You will be prompted to set the key when you use the crate.
 
 ```rust
 
-## Example
-
-```rust
-
 use wifilocate;
 
 #[tokio::main]
