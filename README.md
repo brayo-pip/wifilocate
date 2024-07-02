@@ -16,6 +16,8 @@ This crate requires an API key from [Google](https://developers.google.com/maps/
 
 You will be prompted to set the key when you use the crate.
 
+## Example
+
 ```rust
 
 use wifilocate;
