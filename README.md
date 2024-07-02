@@ -1,6 +1,6 @@
 # wifilocate
 
-A crate to return your GPS location using WiFi hotspots.
+A crate to return your GPS location using WiFi network mac addresses.
 
 ## Usage
 
