@@ -34,4 +34,4 @@ async fn main(){
 
 Copyright 2024 [Brian Vuku]
 
-<!-- see [LICENSE](/LICENSE) -->
+see [LICENSE](/LICENSE)
