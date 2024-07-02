@@ -4,8 +4,8 @@ A crate to return your GPS location using WiFi network mac addresses.
 
 ## Usage
 
-This crate is [on crates.io](https://crates.io/crates/wifilocation) and can be
-used by adding `wifilocation` to the dependencies in your project's `Cargo.toml`.
+This crate is [on crates.io](https://crates.io/crates/wifilocate) and can be
+used by adding `wifilocate` to the dependencies in your project's `Cargo.toml`.
 
 ```toml
 [dependencies]
