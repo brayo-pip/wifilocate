@@ -3,9 +3,11 @@ name = "wifilocate"
 version = "0.1.0"
 authors = ["Brian Vuku <vukubrian@gmail.com>"]
 description = "Get your gps location from wifi networks"
+repository = "https://github.com/brayo-pip/wifilocate"
 keywords = ["wifi", "location", "gps", "gcloud"]
 license = "MIT"
 edition = "2021"
+readme = "README.md"
 
 [dependencies]
 wifiscanner = "0.5.1"
