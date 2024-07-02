@@ -28,7 +28,6 @@ pub struct WifiAccessPoint {
     pub signalStrength: i32,
 }
 
-
 const BASE_URL: &str = "https://www.googleapis.com/geolocation/v1/geolocate?key=";
 
 pub fn get_networks() -> Vec<Wifi> {
@@ -63,7 +62,6 @@ pub fn read_apikey() -> String {
 /// Return GPS location using a Vec of wifiscanner::Wifi. Uses Google's GPS location service
 pub async fn get_location(networks: Vec<Wifi>) -> Result<Vec<GpsLocation>, reqwest::Error> {
 
-    // println!("{:?}", networks);
     let api_key = read_apikey();
     let mut url = BASE_URL.to_string();
     url = url + &api_key ;
