@@ -12,6 +12,12 @@ used by adding `wifilocation` to the dependencies in your project's `Cargo.toml`
 wifilocate = "0.1"
 ```
 
+This crate requires an API key from [Google](https://developers.google.com/maps/documentation/geolocation/get-api-key) to use the Geolocation API.
+
+You will be prompted to set the key when you use the crate.
+
+```rust
+
 ## Example
 
 ```rust
