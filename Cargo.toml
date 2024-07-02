@@ -1,0 +1,18 @@
+[package]
+name = "wifilocate"
+version = "0.1.0"
+authors = ["Brian Vuku <vukubrian@gmail.com>"]
+description = "Get your gps location from wifi networks"
+keywords = ["wifi", "location", "gps", "gcloud"]
+license = "MIT"
+edition = "2021"
+
+[dependencies]
+wifiscanner = "0.5.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0" 
+reqwest = { version = "0.12.5", features = ["json"] }
+tokio = { version = "1.38", features = ["full"] }
+dirs = "5.0.1"
+serde_yaml = "0.9.34"
+
