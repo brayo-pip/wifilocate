@@ -29,7 +29,7 @@ async fn main(){
      );
 }
 ```
-Note that this script requires elevated priviledges to work. It's preferable that you build the binary then either use `chroot` or run as `sudo`.
+Note that this script requires elevated priviledges to work. It's preferable that you build the binary then either use `chroot` or run with `sudo`.
 
 ## Changelog
 
