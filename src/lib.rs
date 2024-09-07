@@ -55,7 +55,6 @@ pub fn read_apikey() -> String {
     if apikey == "my-gcloud-api-key" {
         panic!("Please add your Google Cloud API key to the config file at {:?}", config_file);
     }
-    println!("API Key:{}",apikey.to_string());
     apikey.to_string()
 }
 
