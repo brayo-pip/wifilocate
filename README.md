@@ -35,6 +35,7 @@ Note that this script requires elevated privileges to work. It's preferable that
 ## Changelog
 
 - 0.1.0 - Initial release
+- 0.1.1 - Small bug fixes
 
 ## Copyright
 
