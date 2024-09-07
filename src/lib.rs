@@ -24,8 +24,8 @@ pub struct Location {
 // Define a struct for the request body
 #[derive(Debug, Serialize)]
 pub struct WifiAccessPoint {
-    pub macAddress: String,
-    pub signalStrength: i32,
+    pub mac_address: String,
+    pub signal_strength: i32,
 }
 
 const BASE_URL: &str = "https://www.googleapis.com/geolocation/v1/geolocate?key=";
@@ -73,8 +73,8 @@ pub async fn get_location(networks: Vec<Wifi>) -> Result<Vec<GpsLocation>, reqwe
     
     for network in networks {
         let wifi_access_points = WifiAccessPoint {
-            macAddress: network.mac,
-            signalStrength: -90
+            mac_address: network.mac,
+            signal_strength: -90
         };
         let payload = json!({
             "wifiAccessPoints": [
