@@ -48,7 +48,7 @@ pub fn read_apikey() -> String {
     }
 
     let contents = std::fs::read_to_string(&config_file).unwrap();
-    
+
     let yaml: Value =
         serde_yaml::from_str(&contents).expect("Unable to parse yaml from config file");
     let apikey = yaml["api_key"].as_str().unwrap();
@@ -70,7 +70,7 @@ pub async fn get_location(networks: Vec<Wifi>) -> Result<Vec<GpsLocation>, reqwe
     let client = reqwest::Client::new();
 
     let mut gps_locations: Vec<GpsLocation> = Vec::new();
-    
+
     for network in networks {
         let wifi_access_points = WifiAccessPoint {
             mac_address: network.mac,
