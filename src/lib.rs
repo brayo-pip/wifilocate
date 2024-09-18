@@ -1,12 +1,12 @@
 extern crate reqwest;
 extern crate serde;
-extern crate wifiscanner;
+extern crate wifi_scanner;
 extern crate dirs;
 extern crate serde_yaml;
 
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use wifiscanner::Wifi;
+use wifi_scanner::Wifi;
 use dirs::config_dir;
 use std::{fs::{DirBuilder, File}, io::Write};
 
@@ -31,7 +31,7 @@ pub struct WifiAccessPoint {
 const BASE_URL: &str = "https://www.googleapis.com/geolocation/v1/geolocate?key=";
 
 pub fn get_networks() -> Vec<Wifi> {
-    wifiscanner::scan().unwrap()
+    wifi_scanner::scan().unwrap()
 }
 
 pub fn read_apikey() -> String {
