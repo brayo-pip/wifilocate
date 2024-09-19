@@ -43,7 +43,7 @@ pub fn read_apikey() -> String {
             .create(config_file.parent().unwrap())
             .expect("Unable to create directory");
         let mut file = File::create(&config_file).expect("Unable to create file");
-        file.write_all(b"api_key: my-gcloud-api-key").expect("Unable to write to file");
+        file.write_all(b"apikey: my-gcloud-api-key").expect("Unable to write to file");
         panic!("Please add your Google Cloud API key to the config file at {:?}", &config_file);
     }
 
@@ -51,8 +51,8 @@ pub fn read_apikey() -> String {
 
     let yaml: Value =
         serde_yaml::from_str(&contents).expect("Unable to parse yaml from config file");
-    let apikey = yaml["api_key"].as_str().unwrap();
-    if apikey == "my-gcloud-api-key" {
+    let apikey = yaml["apikey"].as_str().unwrap();
+    if apikey == "my-gcloud-apikey" {
         panic!("Please add your Google Cloud API key to the config file at {:?}", config_file);
     }
     apikey.to_string()
@@ -61,9 +61,9 @@ pub fn read_apikey() -> String {
 /// Return GPS location using a Vec of wifiscanner::Wifi. Uses Google's GPS location service
 pub async fn get_location(networks: Vec<Wifi>) -> Result<Vec<GpsLocation>, reqwest::Error> {
 
-    let api_key = read_apikey();
+    let apikey = read_apikey();
     let mut url = BASE_URL.to_string();
-    url = url + &api_key ;
+    url = url + &apikey ;
 
     let mut headers = reqwest::header::HeaderMap::new();
     headers.insert("Content-Type", "application/json".parse().unwrap());
