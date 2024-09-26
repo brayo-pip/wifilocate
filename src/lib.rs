@@ -34,7 +34,7 @@ pub fn get_networks() -> Vec<Wifi> {
     wifi_scanner::scan().unwrap()
 }
 
-pub fn read_apikey() -> String {
+fn read_apikey() -> String {
     let config_dir = config_dir().unwrap();
     let config_file = config_dir.join("wifi-locator").join("config.yaml");
     if !config_file.exists() {
