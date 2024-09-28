@@ -1,14 +1,17 @@
+extern crate dirs;
 extern crate reqwest;
 extern crate serde;
-extern crate wifi_scanner;
-extern crate dirs;
 extern crate serde_yaml;
+extern crate wifi_scanner;
 
+use dirs::config_dir;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use std::{
+    fs::{DirBuilder, File},
+    io::Write,
+};
 use wifi_scanner::Wifi;
-use dirs::config_dir;
-use std::{fs::{DirBuilder, File}, io::Write};
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct GpsLocation {
@@ -30,6 +33,7 @@ pub struct WifiAccessPoint {
 
 const BASE_URL: &str = "https://www.googleapis.com/geolocation/v1/geolocate?key=";
 
+// Scan for wifi networks
 pub fn get_networks() -> Vec<Wifi> {
     wifi_scanner::scan().unwrap()
 }
@@ -43,8 +47,12 @@ fn read_apikey() -> String {
             .create(config_file.parent().unwrap())
             .expect("Unable to create directory");
         let mut file = File::create(&config_file).expect("Unable to create file");
-        file.write_all(b"apikey: my-gcloud-api-key").expect("Unable to write to file");
-        panic!("Please add your Google Cloud API key to the config file at {:?}", &config_file);
+        file.write_all(b"apikey: my-gcloud-api-key")
+            .expect("Unable to write to file");
+        panic!(
+            "Please add your Google Cloud API key to the config file at {:?}",
+            &config_file
+        );
     }
 
     let contents = std::fs::read_to_string(&config_file).unwrap();
@@ -53,17 +61,27 @@ fn read_apikey() -> String {
         serde_yaml::from_str(&contents).expect("Unable to parse yaml from config file");
     let apikey = yaml["apikey"].as_str().unwrap();
     if apikey == "my-gcloud-apikey" {
-        panic!("Please add your Google Cloud API key to the config file at {:?}", config_file);
+        panic!(
+            "Please add your Google Cloud API key to the config file at {:?}",
+            config_file
+        );
     }
     apikey.to_string()
 }
 
-/// Return GPS location using a Vec of wifiscanner::Wifi. Uses Google's GPS location service
-pub async fn get_location(networks: Vec<Wifi>) -> Result<Vec<GpsLocation>, reqwest::Error> {
+// Scan for wifi networks and return GPS location using Google's GPS location service
+pub async fn get_locations() -> Result<Vec<GpsLocation>, reqwest::Error> {
+    let networks = get_networks();
+    get_location_from_vec(networks).await
+}
 
+// Return GPS location using a Vec of wifiscanner::Wifi. Uses Google's GPS location service
+pub async fn get_location_from_vec(
+    networks: Vec<Wifi>,
+) -> Result<Vec<GpsLocation>, reqwest::Error> {
     let apikey = read_apikey();
     let mut url = BASE_URL.to_string();
-    url = url + &apikey ;
+    url = url + &apikey;
 
     let mut headers = reqwest::header::HeaderMap::new();
     headers.insert("Content-Type", "application/json".parse().unwrap());
@@ -74,14 +92,21 @@ pub async fn get_location(networks: Vec<Wifi>) -> Result<Vec<GpsLocation>, reqwe
     for network in networks {
         let wifi_access_points = WifiAccessPoint {
             mac_address: network.mac,
-            signal_strength: -90
+            signal_strength: -90,
         };
         let payload = json!({
             "wifiAccessPoints": [
                 wifi_access_points
             ]
         });
-        let gps: GpsLocation = client.post(&url).headers(headers.clone()).json(&payload).send().await?.json::<GpsLocation>().await?;
+        let gps: GpsLocation = client
+            .post(&url)
+            .headers(headers.clone())
+            .json(&payload)
+            .send()
+            .await?
+            .json::<GpsLocation>()
+            .await?;
         gps_locations.push(gps);
     }
 
