@@ -1,6 +1,6 @@
 [package]
 name = "wifilocate"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["Brian Vuku <vukubrian@gmail.com>"]
 description = "Get your gps location from wifi networks"
 repository = "https://github.com/brayo-pip/wifilocate"
