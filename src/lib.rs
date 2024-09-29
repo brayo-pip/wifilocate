@@ -19,7 +19,7 @@ pub struct GpsLocation {
     pub location: Location,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Location {
     pub lat: f64,
     pub lng: f64,
