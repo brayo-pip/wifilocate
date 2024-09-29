@@ -1,7 +1,4 @@
-
 #[tokio::main]
-async fn main(){
-	println!( "{:?}",
-		wifilocate::get_location(wifilocate::get_networks()).await.ok()
-	 );
+async fn main() {
+    println!("{:?}", wifilocate::get_locations().await.ok());
 }
