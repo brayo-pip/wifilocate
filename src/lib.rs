@@ -43,6 +43,7 @@ const BASE_URL_GEOCODE: &str = "https://maps.googleapis.com/maps/api/geocode/jso
 // Scan for wifi networks
 pub fn get_networks() -> Vec<Wifi> {
     wifi_scanner::scan().unwrap()
+    // TODO: handle this better
 }
 
 fn read_apikey() -> String {
