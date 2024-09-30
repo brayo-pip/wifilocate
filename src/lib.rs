@@ -13,13 +13,19 @@ use std::{
 };
 use wifi_scanner::Wifi;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct GPSLocationWithAddress {
+    pub address: String,
+    pub gps_location: GpsLocation,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GpsLocation {
     pub accuracy: f64,
     pub location: Location,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Location {
     pub lat: f64,
     pub lng: f64,
@@ -31,7 +37,8 @@ pub struct WifiAccessPoint {
     pub signal_strength: i32,
 }
 
-const BASE_URL: &str = "https://www.googleapis.com/geolocation/v1/geolocate?key=";
+const BASE_URL_GEOLOCATE: &str = "https://www.googleapis.com/geolocation/v1/geolocate?key=";
+const BASE_URL_GEOCODE: &str = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
 
 // Scan for wifi networks
 pub fn get_networks() -> Vec<Wifi> {
@@ -39,6 +46,7 @@ pub fn get_networks() -> Vec<Wifi> {
 }
 
 fn read_apikey() -> String {
+    //TODO: Add caching for the apikey
     let config_dir = config_dir().unwrap();
     let config_file = config_dir.join("wifi-locator").join("config.yaml");
     if !config_file.exists() {
@@ -69,10 +77,42 @@ fn read_apikey() -> String {
     apikey.to_string()
 }
 
-// Scan for wifi networks and return GPS location using Google's GPS location service
+// Scan for wifi networks and return GPS location
 pub async fn get_locations() -> Result<Vec<GpsLocation>, reqwest::Error> {
     let networks = get_networks();
     get_location_from_vec(networks).await
+}
+
+// Scan for wifi networks and return GPS location with addr
+pub async fn get_addresses() -> Result<Vec<GPSLocationWithAddress>, reqwest::Error> {
+    let gps_locations = get_locations().await?;
+    let apikey = read_apikey();
+    let mut headers = reqwest::header::HeaderMap::new();
+    headers.insert("Content-Type", "application/json".parse().unwrap());
+    let client = reqwest::Client::new();
+
+    let mut gps_locations_with_address: Vec<GPSLocationWithAddress> = Vec::new();
+
+    for gps in gps_locations {
+        let latlng = format!("{},{}", gps.location.lat, gps.location.lng);
+        let url = format!("{}{}&key={}=", BASE_URL_GEOCODE, latlng, apikey);
+        let response = client
+            .get(&url)
+            .headers(headers.clone())
+            .send()
+            .await?
+            .json::<Value>()
+            .await?;
+        let address = response["results"][0]["formatted_address"]
+            .as_str()
+            .unwrap();
+        gps_locations_with_address.push(GPSLocationWithAddress {
+            address: address.to_string(),
+            gps_location: gps,
+        });
+    }
+
+    Ok(gps_locations_with_address)
 }
 
 // Return GPS location using a Vec of wifiscanner::Wifi. Uses Google's GPS location service
@@ -80,7 +120,7 @@ pub async fn get_location_from_vec(
     networks: Vec<Wifi>,
 ) -> Result<Vec<GpsLocation>, reqwest::Error> {
     let apikey = read_apikey();
-    let mut url = BASE_URL.to_string();
+    let mut url = BASE_URL_GEOLOCATE.to_string();
     url = url + &apikey;
 
     let mut headers = reqwest::header::HeaderMap::new();

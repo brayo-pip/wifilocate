@@ -32,10 +32,13 @@ async fn main(){
 
 Note that this script requires elevated privileges to work. It's preferable that you build the binary then either use `chown`  or run with `sudo`.
 
+Alterna
+
 ## Changelog
 
 - 0.1.0 - Initial release
 - 0.1.1 - Small bug fixes
+- 0.1.7 - Added GeoCoding support
 
 ## Copyright
 
